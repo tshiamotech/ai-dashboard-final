@@ -8,27 +8,49 @@ force redeploy
   <title>AI Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <link rel="stylesheet" href="styles.css" />
-
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: #e5e7eb;
+      padding: 20px;
+    }
+    h1, h2 {
+      color: #38bdf8;
+    }
+    .card {
+      background: #020617;
+      padding: 16px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+    canvas {
+      max-width: 300px;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 
 <body>
+
   <h1>AI Dashboard</h1>
-  <h2>Market & Football Predictions</h2>
+  <p>Market & Football Predictions</p>
 
-  <section class="card">
-    <h3>Market Insights</h3>
-    <pre id="market-data">Loading market data...</pre>
+  <div class="card">
+    <h2>Market Insights</h2>
+    <div id="market">Loading market data...</div>
     <canvas id="marketChart"></canvas>
-  </section>
+  </div>
 
-  <section class="card">
-    <h3>Football Predictions</h3>
-    <pre id="football-data">Loading football data...</pre>
-  </section>
+  <div class="card">
+    <h2>Football Predictions</h2>
+    <div id="football">Loading football data...</div>
+    <canvas id="footballChart"></canvas>
+  </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="app.js"></script>
+
 </body>
 </html>
+
