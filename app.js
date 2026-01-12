@@ -1,9 +1,22 @@
-console.log("App loaded");
+const API_KEY = "ZF43I39J4DGVZ40H";
 
-// Market data
-document.getElementById("market-data").innerText =
-  "📈 S&P 500: Bullish bias today\n📊 Nasdaq: Momentum slowing";
+// Market data (S&P 500 proxy: SPY ETF)
+async function loadMarketData() {
+  try {
+    const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=SPY&apikey=${API_KEY}`;
+    const res = await fetch(url);
+    const data = await res.json();
 
-// Football predictions
-document.getElementById("football-data").innerText =
-  "⚽ Arsenal vs Chelsea: Over 2.5 Goals\n⚽ Barcelona win (1X2)";
+    const quote = data["Global Quote"];
+    const price = quote["05. price"];
+    const change = quote["10. change percent"];
+
+    document.getElementById("market-data").innerText =
+      `📈 S&P 500 (SPY)\nPrice: $${price}\nChange: ${change}`;
+  } catch (err) {
+    document.getElementById("market-data").innerText =
+      "⚠️ Failed to load market data";
+  }
+}
+
+loadMarketData();
