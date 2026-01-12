@@ -1,7 +1,8 @@
 console.log("SERVER FILE LOADED");
-import express from "express";
-import fetch from "node-fetch";
-import cors from "cors";
+
+const express = require("express");
+const fetch = require("node-fetch");
+const cors = require("cors");
 
 const app = express();
 app.use(cors());
@@ -9,12 +10,12 @@ app.use(cors());
 const PORT = process.env.PORT || 3000;
 const API_KEY = process.env.FOOTBALL_API_KEY;
 
-/* Root check */
+/* ROOT */
 app.get("/", (req, res) => {
   res.send("Football proxy running");
 });
 
-/* FOOTBALL ENDPOINT */
+/* FOOTBALL ROUTE */
 app.get("/football", async (req, res) => {
   try {
     if (!API_KEY) {
@@ -32,18 +33,7 @@ app.get("/football", async (req, res) => {
 
     const data = await response.json();
 
-    if (!data.response || data.response.length === 0) {
-      return res.json({ message: "No live football data available" });
-    }
-
-    const match = data.response[0];
-
-    res.json({
-      home: match.teams.home.name,
-      away: match.teams.away.name,
-      kickoff: match.fixture.date
-    });
-
+    res.json(data);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -52,4 +42,5 @@ app.get("/football", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Football proxy running on port ${PORT}`);
 });
+
 
