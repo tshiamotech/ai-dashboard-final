@@ -19,35 +19,26 @@ async function loadMarketData() {
   }
 }
 
-loadMarketData();
-
-const FOOTBALL_API_KEY = "46d024ff909f6c7f353e9784854b3a2d";
-
 async function loadFootballData() {
   try {
+    // Public fixtures data (no key needed)
     const res = await fetch(
-      "https://v3.football.api-sports.io/fixtures?next=1",
-      {
-        headers: {
-          "x-apisports-key": FOOTBALL_API_KEY
-        }
-      }
+      "https://raw.githubusercontent.com/openfootball/football.json/master/2025-26/en.1.json"
     );
 
     const data = await res.json();
-    const match = data.response[0];
+    const match = data.matches[0];
 
-    const home = match.teams.home.name;
-    const away = match.teams.away.name;
-    const date = new Date(match.fixture.date).toLocaleString();
+    const home = match.team1;
+    const away = match.team2;
+    const date = match.date;
 
     document.getElementById("football-data").innerText =
-      `⚽ ${home} vs ${away}\n📅 ${date}\nPrediction: Home/Draw`;
+      `⚽ ${home} vs ${away}\n📅 ${date}\nPrediction: Over 2.5 Goals`;
   } catch (err) {
     document.getElementById("football-data").innerText =
-      "⚠️ Failed to load football data";
+      "⚠️ Football data unavailable";
   }
 }
 
 loadFootballData();
-
