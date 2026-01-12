@@ -3,31 +3,43 @@
 // ===============================
 
 // Load MARKET data from local JSON (updated daily by GitHub Actions)
-function drawMarketChart(prices) {
-  const canvas = document.getElementById("marketChart");
-  const ctx = canvas.getContext("2d");
+async function loadMarketData() {
+  try {
+    const res = await fetch("data/market.json");
+    const data = await res.json();
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const price = Number(data.price); // 🔥 FORCE NUMBER
 
-  const max = Math.max(...prices);
-  const min = Math.min(...prices);
+    document.getElementById("market-data").innerText =
+`📈 S&P 500 (SPY)
+Price: $${price}
+Change: ${data.change}
+Recommendation: ${data.recommendation}
+Confidence: ${data.confidence}%`;
 
-  const padding = 20;
-  const scaleX = (canvas.width - padding * 2) / (prices.length - 1);
-  const scaleY = (canvas.height - padding * 2) / (max - min);
+    document.getElementById("market-confidence").style.width =
+      data.confidence + "%";
 
-  ctx.beginPath();
-  ctx.strokeStyle = "#22c55e";
-  ctx.lineWidth = 2;
+    // TEMP price history (now numeric)
+    const priceHistory = [
+      price - 3,
+      price - 2,
+      price - 1,
+      price - 0.5,
+      price,
+      price + 0.3,
+      price + 0.6
+    ];
 
-  prices.forEach((price, i) => {
-    const x = padding + i * scaleX;
-    const y = canvas.height - padding - (price - min) * scaleY;
-    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-  });
+    drawMarketChart(priceHistory);
 
-  ctx.stroke();
+  } catch (err) {
+    document.getElementById("market-data").innerText =
+      "Market data unavailable";
+    console.error(err);
+  }
 }
+
 
 async function loadMarketData() {
   try {
