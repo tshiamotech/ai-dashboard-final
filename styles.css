@@ -53,3 +53,9 @@ pre {
   background: linear-gradient(90deg, #22c55e, #4ade80);
   transition: width 0.6s ease;
 }
+canvas {
+  margin-top: 15px;
+  background: #020617;
+  border-radius: 8px;
+}
+
