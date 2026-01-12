@@ -3,42 +3,52 @@ const API_KEY = "ZF43I39J4DGVZ40H";
 async function loadMarketData() {
   const fallback = () => {
     document.getElementById("market-data").innerText =
-      "📈 Market data temporarily unavailable\nRecommendation: HOLD / WAIT";
+      "📈 Market data unavailable\nConfidence: 0%";
   };
 
   try {
-    const controller = new AbortController();
-    setTimeout(() => controller.abort(), 5000);
-
     const url =
       "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=SPY&apikey=" +
       API_KEY;
 
-    const res = await fetch(url, { signal: controller.signal });
+    const res = await fetch(url);
     const data = await res.json();
 
-    if (!data["Global Quote"]) {
-      fallback();
-      return;
-    }
+    if (!data["Global Quote"]) return fallback();
 
     const quote = data["Global Quote"];
     const change = parseFloat(quote["10. change percent"]);
 
-    const recommendation =
-      change > 0.5 ? "BUY / LONG" : "HOLD / WAIT";
+    let confidence;
+    let recommendation;
+
+    if (change > 1) {
+      recommendation = "BUY / LONG";
+      confidence = 85;
+    } else if (change > 0.3) {
+      recommendation = "BUY / LONG";
+      confidence = 72;
+    } else if (change > 0) {
+      recommendation = "HOLD";
+      confidence = 60;
+    } else {
+      recommendation = "AVOID / WAIT";
+      confidence = 40;
+    }
 
     document.getElementById("market-data").innerText =
       `📈 S&P 500 (SPY)
 Price: $${quote["05. price"]}
 Change: ${quote["10. change percent"]}
-Recommendation: ${recommendation}`;
+Recommendation: ${recommendation}
+Confidence: ${confidence}%`;
   } catch {
     fallback();
   }
 }
 
 loadMarketData();
+
 
 async function loadFootballData() {
   try {
