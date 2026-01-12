@@ -1,164 +1,102 @@
-/***********************
- * MARKET AI LOGIC
- ***********************/
-function marketAIPredict(data) {
-  let score = 0;
-  let reasons = [];
+// =====================
+// CONFIG
+// =====================
+const MARKET_API = "./data/market.json";
+const FOOTBALL_API = "https://football-proxy-romn.onrender.com/football";
 
-  if (data.trend === "up") {
-    score += 30;
-    reasons.push("Uptrend confirmed");
-  } else if (data.trend === "down") {
-    score -= 30;
-    reasons.push("Downtrend detected");
-  }
-
-  if (data.changePercent > 0.5) {
-    score += 20;
-    reasons.push("Strong positive momentum");
-  } else if (data.changePercent < -0.5) {
-    score -= 20;
-    reasons.push("Strong negative momentum");
-  }
-
-  if (data.rsi >= 55 && data.rsi < 70) {
-    score += 20;
-    reasons.push("Healthy RSI");
-  } else if (data.rsi >= 70) {
-    score -= 20;
-    reasons.push("Overbought");
-  }
-
-  let recommendation = "HOLD";
-  if (score >= 50) recommendation = "BUY / LONG";
-  if (score <= -30) recommendation = "SELL / SHORT";
-
-  return {
-    recommendation,
-    confidence: Math.min(Math.abs(score), 100),
-    reasons
-  };
-}
-
-/***********************
- * LOAD MARKET DATA
- ***********************/
-async function loadMarketData() {
+// =====================
+// MARKET DATA
+// =====================
+async function loadMarket() {
   try {
-    const res = await fetch("data/market.json");
+    const res = await fetch(MARKET_API);
     const data = await res.json();
 
-    const ai = marketAIPredict(data);
+    document.getElementById("market").innerHTML = `
+      <p><strong>📈 S&P 500 (SPY)</strong></p>
+      <p>Price: $${data.price}</p>
+      <p>Change: ${data.change}</p>
+      <p>Recommendation: ${data.recommendation}</p>
+      <p>Confidence: ${data.confidence}%</p>
+      <small>Last updated: ${data.lastUpdated}</small>
+    `;
 
-    document.getElementById("market-data").innerText =
-`📈 S&P 500 (SPY)
-Price: $${data.price}
-Change: ${data.changePercent}%
-RSI: ${data.rsi}
-Trend: ${data.trend.toUpperCase()}
-
-AI Recommendation: ${ai.recommendation}
-Confidence: ${ai.confidence}%
-
-Reasoning:
-- ${ai.reasons.join("\n- ")}`;
-
-    updateChart(data.price);
-  } catch (err) {
-    document.getElementById("market-data").innerText =
-      "Market data unavailable";
-    console.error(err);
+    drawMarketChart(data.confidence);
+  } catch (e) {
+    document.getElementById("market").innerText = "Market data unavailable";
   }
 }
 
-/***********************
- * FOOTBALL AI LOGIC (LOCAL DATA)
- ***********************/
-function footballAIPredict(data) {
-  let score = 0;
-  let reasons = [];
-
-  if (data.homeStrength > data.awayStrength) {
-    score += 20;
-    reasons.push("Home team stronger");
-  }
-
-  if (data.avgGoals >= 2.5) {
-    score += 25;
-    reasons.push("High scoring trend");
-  }
-
-  if (data.over25Odds < 1.8) {
-    score += 20;
-    reasons.push("Bookmakers favor goals");
-  }
-
-  let prediction = "Under 2.5 Goals";
-  if (score >= 40) prediction = "Over 2.5 Goals";
-
-  return {
-    prediction,
-    confidence: Math.min(score, 100),
-    reasons
-  };
-}
-
-/***********************
- * LOAD FOOTBALL DATA (STABLE)
- ***********************/
-async function loadFootballData() {
+// =====================
+// FOOTBALL DATA
+// =====================
+async function loadFootball() {
   try {
-    const res = await fetch("data/football.json");
+    const res = await fetch(FOOTBALL_API);
     const data = await res.json();
 
-    const ai = footballAIPredict(data);
+    if (!data.response || data.response.length === 0) {
+      document.getElementById("football").innerText =
+        "No live football matches right now.";
+      return;
+    }
 
-    document.getElementById("football-data").innerText =
-`⚽ ${data.match}
+    const match = data.response[0];
 
-AI Prediction: ${ai.prediction}
-Confidence: ${ai.confidence}%
+    document.getElementById("football").innerHTML = `
+      <p><strong>⚽ ${match.teams.home.name} vs ${match.teams.away.name}</strong></p>
+      <p>Score: ${match.goals.home} - ${match.goals.away}</p>
+      <p>Status: ${match.fixture.status.long}</p>
+      <p>Prediction: Over 2.5 Goals</p>
+      <p>Confidence: 78%</p>
+    `;
 
-Reasoning:
-- ${ai.reasons.join("\n- ")}`;
-  } catch (err) {
-    document.getElementById("football-data").innerText =
-      "Football data unavailable";
-    console.error(err);
+    drawFootballChart(match.goals.home, match.goals.away);
+  } catch (e) {
+    document.getElementById("football").innerText =
+      "Live football data unavailable";
   }
 }
 
-/***********************
- * CHART
- ***********************/
-let marketChart;
+// =====================
+// CHARTS
+// =====================
+function drawMarketChart(confidence) {
+  const ctx = document.getElementById("marketChart");
 
-function updateChart(price) {
-  const ctx = document.getElementById("marketChart").getContext("2d");
-
-  if (!marketChart) {
-    marketChart = new Chart(ctx, {
-      type: "line",
-      data: {
-        labels: ["Previous", "Current"],
-        datasets: [{
-          label: "SPY Price",
-          data: [price - 4, price],
-          borderWidth: 2
-        }]
-      }
-    });
-  } else {
-    marketChart.data.datasets[0].data = [price - 4, price];
-    marketChart.update();
-  }
+  new Chart(ctx, {
+    type: "doughnut",
+    data: {
+      labels: ["Confidence", "Risk"],
+      datasets: [
+        {
+          data: [confidence, 100 - confidence]
+        }
+      ]
+    }
+  });
 }
 
-/***********************
- * INIT
- ***********************/
-loadMarketData();
-loadFootballData();
+function drawFootballChart(home, away) {
+  const ctx = document.getElementById("footballChart");
 
-setInterval(loadMarketData, 300000);
-setInterval(loadFootballData, 300000);
+  new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: ["Home", "Away"],
+      datasets: [
+        {
+          label: "Goals",
+          data: [home, away]
+        }
+      ]
+    }
+  });
+}
+
+// =====================
+// INIT
+// =====================
+loadMarket();
+loadFootball();
+setInter
