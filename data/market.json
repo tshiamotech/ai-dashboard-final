@@ -1,6 +1,6 @@
 {
   "price": 694.07,
-  "change": "0.66%",
-  "recommendation": "BUY / LONG",
-  "confidence": 72
+  "changePercent": 0.66,
+  "rsi": 62,
+  "trend": "up"
 }
