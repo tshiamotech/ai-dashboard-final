@@ -1,11 +1,10 @@
 /***********************
- * AI MARKET LOGIC
+ * MARKET AI LOGIC
  ***********************/
 function marketAIPredict(data) {
   let score = 0;
   let reasons = [];
 
-  // Trend logic
   if (data.trend === "up") {
     score += 30;
     reasons.push("Uptrend confirmed");
@@ -14,7 +13,6 @@ function marketAIPredict(data) {
     reasons.push("Downtrend detected");
   }
 
-  // Momentum logic
   if (data.changePercent > 0.5) {
     score += 20;
     reasons.push("Strong positive momentum");
@@ -23,25 +21,71 @@ function marketAIPredict(data) {
     reasons.push("Strong negative momentum");
   }
 
-  // RSI logic
   if (data.rsi >= 55 && data.rsi < 70) {
     score += 20;
     reasons.push("Healthy RSI");
   } else if (data.rsi >= 70) {
     score -= 20;
-    reasons.push("Overbought market");
-  } else if (data.rsi < 45) {
-    score -= 10;
-    reasons.push("Weak RSI");
+    reasons.push("Overbought");
   }
 
-  // Final decision
   let recommendation = "HOLD";
   if (score >= 50) recommendation = "BUY / LONG";
   if (score <= -30) recommendation = "SELL / SHORT";
 
   return {
     recommendation,
+    confidence: Math.min(Math.abs(score), 100),
+    reasons
+  };
+}
+
+/***********************
+ * FOOTBALL AI LOGIC
+ ***********************/
+function footballAIPredict(data) {
+  let score = 0;
+  let reasons = [];
+
+  // Team strength
+  if (data.homeStrength > data.awayStrength) {
+    score += 20;
+    reasons.push("Home team stronger");
+  } else {
+    score -= 10;
+    reasons.push("Away team stronger");
+  }
+
+  // Recent form
+  if (data.homeForm >= 3) {
+    score += 15;
+    reasons.push("Strong home form");
+  }
+  if (data.awayForm <= 2) {
+    score += 10;
+    reasons.push("Weak away form");
+  }
+
+  // Goals logic
+  if (data.avgGoals >= 2.5) {
+    score += 25;
+    reasons.push("High scoring teams");
+  } else {
+    score -= 15;
+    reasons.push("Low scoring trend");
+  }
+
+  // Odds logic
+  if (data.over25Odds < 1.8) {
+    score += 20;
+    reasons.push("Bookmakers favor goals");
+  }
+
+  let prediction = "Under 2.5 Goals";
+  if (score >= 40) prediction = "Over 2.5 Goals";
+
+  return {
+    prediction,
     confidence: Math.min(Math.abs(score), 100),
     reasons
   };
@@ -86,10 +130,16 @@ async function loadFootballData() {
     const res = await fetch("data/football.json");
     const data = await res.json();
 
+    const ai = footballAIPredict(data);
+
     document.getElementById("football-data").innerText =
 `⚽ ${data.match}
-Prediction: ${data.prediction}
-Confidence: ${data.confidence}%`;
+
+AI Prediction: ${ai.prediction}
+Confidence: ${ai.confidence}%
+
+Reasoning:
+- ${ai.reasons.join("\n- ")}`;
   } catch (err) {
     document.getElementById("football-data").innerText =
       "Football data unavailable";
@@ -129,5 +179,5 @@ function updateChart(price) {
 loadMarketData();
 loadFootballData();
 
-setInterval(loadMarketData, 300000);   // 5 minutes
-setInterval(loadFootballData, 300000); // 5 minutes
+setInterval(loadMarketData, 300000);
+setInterval(loadFootballData, 300000);
