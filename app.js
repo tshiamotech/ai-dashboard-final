@@ -1,14 +1,74 @@
+/***********************
+ * AI MARKET LOGIC
+ ***********************/
+function marketAIPredict(data) {
+  let score = 0;
+  let reasons = [];
+
+  // Trend logic
+  if (data.trend === "up") {
+    score += 30;
+    reasons.push("Uptrend confirmed");
+  } else if (data.trend === "down") {
+    score -= 30;
+    reasons.push("Downtrend detected");
+  }
+
+  // Momentum logic
+  if (data.changePercent > 0.5) {
+    score += 20;
+    reasons.push("Strong positive momentum");
+  } else if (data.changePercent < -0.5) {
+    score -= 20;
+    reasons.push("Strong negative momentum");
+  }
+
+  // RSI logic
+  if (data.rsi >= 55 && data.rsi < 70) {
+    score += 20;
+    reasons.push("Healthy RSI");
+  } else if (data.rsi >= 70) {
+    score -= 20;
+    reasons.push("Overbought market");
+  } else if (data.rsi < 45) {
+    score -= 10;
+    reasons.push("Weak RSI");
+  }
+
+  // Final decision
+  let recommendation = "HOLD";
+  if (score >= 50) recommendation = "BUY / LONG";
+  if (score <= -30) recommendation = "SELL / SHORT";
+
+  return {
+    recommendation,
+    confidence: Math.min(Math.abs(score), 100),
+    reasons
+  };
+}
+
+/***********************
+ * LOAD MARKET DATA
+ ***********************/
 async function loadMarketData() {
   try {
     const res = await fetch("data/market.json");
     const data = await res.json();
 
+    const ai = marketAIPredict(data);
+
     document.getElementById("market-data").innerText =
 `📈 S&P 500 (SPY)
 Price: $${data.price}
-Change: ${data.change}
-Recommendation: ${data.recommendation}
-Confidence: ${data.confidence}%`;
+Change: ${data.changePercent}%
+RSI: ${data.rsi}
+Trend: ${data.trend.toUpperCase()}
+
+AI Recommendation: ${ai.recommendation}
+Confidence: ${ai.confidence}%
+
+Reasoning:
+- ${ai.reasons.join("\n- ")}`;
 
     updateChart(data.price);
   } catch (err) {
@@ -18,6 +78,9 @@ Confidence: ${data.confidence}%`;
   }
 }
 
+/***********************
+ * LOAD FOOTBALL DATA
+ ***********************/
 async function loadFootballData() {
   try {
     const res = await fetch("data/football.json");
@@ -34,8 +97,9 @@ Confidence: ${data.confidence}%`;
   }
 }
 
-/* ===== CHART ===== */
-
+/***********************
+ * CHART LOGIC
+ ***********************/
 let marketChart;
 
 function updateChart(price) {
@@ -45,7 +109,7 @@ function updateChart(price) {
     marketChart = new Chart(ctx, {
       type: "line",
       data: {
-        labels: ["Yesterday", "Today"],
+        labels: ["Previous", "Current"],
         datasets: [{
           label: "SPY Price",
           data: [price - 4, price],
@@ -59,8 +123,9 @@ function updateChart(price) {
   }
 }
 
-/* ===== LOAD + AUTO UPDATE ===== */
-
+/***********************
+ * INIT + AUTO UPDATE
+ ***********************/
 loadMarketData();
 loadFootballData();
 
