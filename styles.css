@@ -1,2 +1,55 @@
-/* CSS placeholder */
-body { font-family: Arial; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0f172a;
+  color: #e5e7eb;
+}
+
+.container {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  text-align: center;
+  color: #94a3b8;
+  margin-bottom: 30px;
+}
+
+.card {
+  background: #020617;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+h2 {
+  margin-top: 0;
+}
+
+pre {
+  white-space: pre-wrap;
+  font-family: inherit;
+  margin-bottom: 12px;
+}
+
+.confidence-bar {
+  background: #1e293b;
+  height: 10px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.confidence-bar div {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #22c55e, #4ade80);
+  transition: width 0.6s ease;
+}
