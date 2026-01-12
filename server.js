@@ -1,3 +1,4 @@
+console.log("SERVER FILE LOADED");
 import express from "express";
 import fetch from "node-fetch";
 import cors from "cors";
@@ -51,3 +52,4 @@ app.get("/football", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Football proxy running on port ${PORT}`);
 });
+
