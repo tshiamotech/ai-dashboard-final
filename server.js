@@ -1,4 +1,4 @@
-console.log("SERVER FILE LOADED");
+console.log("SERVER FILE LOADED — NUCLEAR FIX");
 
 const express = require("express");
 const fetch = require("node-fetch");
@@ -10,16 +10,17 @@ app.use(cors());
 const PORT = process.env.PORT || 3000;
 const API_KEY = process.env.FOOTBALL_API_KEY;
 
-/* ROOT */
-app.get("/", (req, res) => {
-  res.send("Football proxy running");
+/* LOG EVERY REQUEST */
+app.use((req, res, next) => {
+  console.log("REQUEST:", req.method, req.url);
+  next();
 });
 
-/* FOOTBALL ROUTE */
-app.get("/football", async (req, res) => {
+/* FORCE FOOTBALL ROUTE */
+app.use("/football", async (req, res) => {
   try {
     if (!API_KEY) {
-      return res.status(500).json({ error: "API key missing" });
+      return res.json({ error: "API key missing" });
     }
 
     const response = await fetch(
@@ -32,15 +33,19 @@ app.get("/football", async (req, res) => {
     );
 
     const data = await response.json();
-
     res.json(data);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.json({ error: err.message });
   }
 });
 
+/* ROOT */
+app.use("/", (req, res) => {
+  res.send("Football proxy running");
+});
+
 app.listen(PORT, () => {
-  console.log(`Football proxy running on port ${PORT}`);
+  console.log("Football proxy running on port", PORT);
 });
 
 
