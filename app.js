@@ -11,6 +11,7 @@ async function loadMarket() {
   try {
     const res = await fetch(MARKET_API);
     const data = await res.json();
+    console.log("MARKET JSON:", data);
 
     document.getElementById("market").innerHTML = `
       <p><strong>📈 S&P 500 (SPY)</strong></p>
