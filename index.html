@@ -5,35 +5,28 @@
   <meta charset="UTF-8" />
   <title>AI Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
 
-  <div class="container">
-    <h1>AI Dashboard</h1>
-    <p class="subtitle">Market & Football Predictions</p>
-
-    <div class="card">
-      <h2>Market Insights</h2>
-      <canvas id="marketChart" width="300" height="150"></canvas>
-      <pre id="market-data">Loading market data...</pre>
-      <div class="confidence-bar">
-        <div id="market-confidence"></div>
-      </div>
-      <canvas id="marketChart" width="300" height="150"></canvas>
-      <canvas id="marketChart"></canvas>
-    </div>
-
-    <div class="card">
-      <h2>Football Predictions</h2>
-      <pre id="football-data">Loading football data...</pre>
-      <div class="confidence-bar">
-        <div id="football-confidence"></div>
-      </div>
-    </div>
-  </div>
-
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <h1>AI Dashboard</h1>
+  <h2>Market & Football Predictions</h2>
+
+  <section class="card">
+    <h3>Market Insights</h3>
+    <pre id="market-data">Loading market data...</pre>
+    <canvas id="marketChart"></canvas>
+  </section>
+
+  <section class="card">
+    <h3>Football Predictions</h3>
+    <pre id="football-data">Loading football data...</pre>
+  </section>
+
   <script src="app.js"></script>
 </body>
 </html>
