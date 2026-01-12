@@ -1,9 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>AI Dashboard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Dashboard</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
 </head>
 <body>
-<h1>AI Dashboard</h1>
+  <header>
+    <h1>AI Dashboard</h1>
+    <p>Market & Football Predictions</p>
+  </header>
+
+  <main>
+    <section class="card" id="market">
+      <h2>Market Insights</h2>
+      <div id="market-data">Loading market data...</div>
+    </section>
+
+    <section class="card" id="football">
+      <h2>Football Predictions</h2>
+      <div id="football-data">Loading football predictions...</div>
+    </section>
+  </main>
+
+  <!-- JS -->
+  <script src="app.js"></script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js');
+    }
+  </script>
 </body>
 </html>
