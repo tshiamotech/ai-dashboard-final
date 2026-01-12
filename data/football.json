@@ -2,8 +2,6 @@
   "match": "Arsenal vs Chelsea",
   "homeStrength": 85,
   "awayStrength": 80,
-  "homeForm": 4,
-  "awayForm": 2,
   "avgGoals": 2.9,
   "over25Odds": 1.72
 }
