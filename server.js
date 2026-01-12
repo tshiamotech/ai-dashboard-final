@@ -24,7 +24,7 @@ app.use("/football", async (req, res) => {
     }
 
     const response = await fetch(
-      "https://v3.football.api-sports.io/fixtures?next=1",
+      "https://v3.football.api-sports.io/fixtures?live=all",
       {
         headers: {
           "x-apisports-key": API_KEY
@@ -47,5 +47,6 @@ app.use("/", (req, res) => {
 app.listen(PORT, () => {
   console.log("Football proxy running on port", PORT);
 });
+
 
 
