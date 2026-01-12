@@ -34,3 +34,7 @@ Confidence: ${data.confidence}%`;
 
 loadMarketData();
 loadFootballData();
+
+setInterval(loadMarketData, 300000);   // 5 minutes
+setInterval(loadFootballData, 300000); // 5 minutes
+
