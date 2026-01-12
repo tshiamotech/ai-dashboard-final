@@ -1,61 +1,28 @@
 body {
-  margin: 0;
   font-family: Arial, sans-serif;
   background: #0f172a;
   color: #e5e7eb;
-}
-
-.container {
-  max-width: 600px;
-  margin: auto;
   padding: 20px;
 }
 
-h1 {
+h1, h2 {
   text-align: center;
-  margin-bottom: 5px;
-}
-
-.subtitle {
-  text-align: center;
-  color: #94a3b8;
-  margin-bottom: 30px;
 }
 
 .card {
-  background: #020617;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-}
-
-h2 {
-  margin-top: 0;
+  background: #111827;
+  border-radius: 10px;
+  padding: 15px;
+  margin: 20px auto;
+  max-width: 600px;
 }
 
 pre {
   white-space: pre-wrap;
-  font-family: inherit;
-  margin-bottom: 12px;
+  font-size: 15px;
+  margin-top: 10px;
 }
 
-.confidence-bar {
-  background: #1e293b;
-  height: 10px;
-  border-radius: 6px;
-  overflow: hidden;
-}
-
-.confidence-bar div {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, #22c55e, #4ade80);
-  transition: width 0.6s ease;
-}
 canvas {
-  margin-top: 15px;
-  background: #020617;
-  border-radius: 8px;
+  margin-top: 20px;
 }
-
