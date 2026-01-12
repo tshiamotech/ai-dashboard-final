@@ -3,40 +3,33 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI Dashboard</title>
-
-  <!-- CSS -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="styles.css" />
-
-  <!-- PWA -->
-  <link rel="manifest" href="manifest.json" />
 </head>
 <body>
-  <header>
+
+  <div class="container">
     <h1>AI Dashboard</h1>
-    <p>Market & Football Predictions</p>
-  </header>
+    <p class="subtitle">Market & Football Predictions</p>
 
-  <main>
-    <section class="card" id="market">
+    <div class="card">
       <h2>Market Insights</h2>
-      <div id="market-data">Loading market data...</div>
-    </section>
+      <pre id="market-data">Loading market data...</pre>
+      <div class="confidence-bar">
+        <div id="market-confidence"></div>
+      </div>
+    </div>
 
-    <section class="card" id="football">
+    <div class="card">
       <h2>Football Predictions</h2>
-      <div id="football-data">Loading football predictions...</div>
-    </section>
-  </main>
+      <pre id="football-data">Loading football data...</pre>
+      <div class="confidence-bar">
+        <div id="football-confidence"></div>
+      </div>
+    </div>
+  </div>
 
-  <!-- JS -->
   <script src="app.js"></script>
-
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js');
-    }
-  </script>
 </body>
 </html>
