@@ -1,5 +1,9 @@
 {
   "match": "Arsenal vs Chelsea",
-  "prediction": "Over 2.5 Goals",
-  "confidence": 78
+  "homeStrength": 85,
+  "awayStrength": 80,
+  "homeForm": 4,
+  "awayForm": 2,
+  "avgGoals": 2.9,
+  "over25Odds": 1.72
 }
