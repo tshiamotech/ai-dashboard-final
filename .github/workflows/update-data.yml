@@ -13,6 +13,9 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
+      - name: Install required tools
+        run: sudo apt-get update && sudo apt-get install -y jq bc
+
       - name: Fetch real market data
         env:
           API_KEY: ${{ secrets.ALPHA_VANTAGE_KEY }}
