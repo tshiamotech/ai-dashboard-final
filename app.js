@@ -9,6 +9,8 @@ Price: $${data.price}
 Change: ${data.change}
 Recommendation: ${data.recommendation}
 Confidence: ${data.confidence}%`;
+
+    updateChart(data.price);
   } catch (err) {
     document.getElementById("market-data").innerText =
       "Market data unavailable";
@@ -32,9 +34,35 @@ Confidence: ${data.confidence}%`;
   }
 }
 
+/* ===== CHART ===== */
+
+let marketChart;
+
+function updateChart(price) {
+  const ctx = document.getElementById("marketChart").getContext("2d");
+
+  if (!marketChart) {
+    marketChart = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: ["Yesterday", "Today"],
+        datasets: [{
+          label: "SPY Price",
+          data: [price - 4, price],
+          borderWidth: 2
+        }]
+      }
+    });
+  } else {
+    marketChart.data.datasets[0].data = [price - 4, price];
+    marketChart.update();
+  }
+}
+
+/* ===== LOAD + AUTO UPDATE ===== */
+
 loadMarketData();
 loadFootballData();
 
 setInterval(loadMarketData, 300000);   // 5 minutes
 setInterval(loadFootballData, 300000); // 5 minutes
-
